@@ -1,6 +1,7 @@
 ﻿using GradeBook.Enums;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace GradeBook.GradeBooks
@@ -19,39 +20,19 @@ namespace GradeBook.GradeBooks
             {
                 throw new InvalidOperationException("Can`t be less than 5 students!");
             }
+            var twentyPercent = (int)Math.Ceiling(Students.Count * 0.2);
 
-            int twentyPercent = Students.Count/5;
-            int betterStudents = 0;
-            foreach (var student in Students)
-            {
-                if (averageGrade<= student.AverageGrade)
-                {
-                    betterStudents++;
-                }
-            }
-            if (betterStudents<=twentyPercent)
-            {
+            var grades = Students.OrderByDescending(e => e.AverageGrade).Select(e => e.AverageGrade).ToList();
+
+            if (averageGrade >= grades[twentyPercent - 1])
                 return 'A';
-            }
-            else if (betterStudents >twentyPercent && betterStudents<= twentyPercent*2)
-            {
+            if (averageGrade >= grades[(twentyPercent * 2) - 1])
                 return 'B';
-            }
-            else if (betterStudents > twentyPercent * 2 && betterStudents <= twentyPercent * 3)
-            {
+            if (averageGrade >= grades[(twentyPercent * 3) - 1])
                 return 'C';
-            }
-            else if (betterStudents > twentyPercent * 3 && betterStudents <= twentyPercent * 4)
-            {
+            if (averageGrade >= grades[(twentyPercent * 4) - 1])
                 return 'D';
-            }
-            else
-            {
-                return 'F';
-            }
-
-
-
+            return 'F';
         }
     }
 }
