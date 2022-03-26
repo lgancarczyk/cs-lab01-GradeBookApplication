@@ -12,27 +12,47 @@ namespace GradeBook.GradeBooks
         {
             Type = GradeBookType.Ranked;
         }
-
+        
         public override char GetLetterGrade(double averageGrade)
         {
-            //return base.GetLetterGrade(averageGrade);
-            if (Students.Count <5)
+            //return base.GetLetterGrade(averageGrade) ;  ten średniczek wysypuje program jak jest bez spacji xddddd godzinka w plecy 
+
+            if (Students.Count < 5)
             {
-                throw new InvalidOperationException("Can`t be less than 5 students!");
+                throw new InvalidOperationException();
             }
-            var twentyPercent = (int)Math.Ceiling(Students.Count * 0.2);
+            int noOfStudents = Students.Count;
+            int betterStudents = 0;
 
-            var grades = Students.OrderByDescending(e => e.AverageGrade).Select(e => e.AverageGrade).ToList();
+            foreach (var student in Students)
+            {
+                if (student.AverageGrade > averageGrade)
+                {
+                    betterStudents++;
+                }
+            }
 
-            if (averageGrade >= grades[twentyPercent - 1])
+            if (betterStudents < (noOfStudents * 0.2))
+            {
                 return 'A';
-            if (averageGrade >= grades[(twentyPercent * 2) - 1])
+            }
+            else if (betterStudents < (noOfStudents * 0.4))
+            {
                 return 'B';
-            if (averageGrade >= grades[(twentyPercent * 3) - 1])
+            }         
+            else if (betterStudents < (noOfStudents * 0.6))
+            {
                 return 'C';
-            if (averageGrade >= grades[(twentyPercent * 4) - 1])
+            }           
+            else if (betterStudents < (noOfStudents * 0.8))
+            {
                 return 'D';
-            return 'F';
+            }
+            else 
+            {
+                return 'F';
+            }
+                
         }
 
         public override void CalculateStatistics()
